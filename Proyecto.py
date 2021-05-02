@@ -10,15 +10,29 @@ from tensorflow.keras.models import Sequential
 
 import pathlib
 # Fotos - Obtener Fotos
-dataset_url = "https://storage.googleapis.com/download.tensorflow.org/example_images/flower_photos.tgz"
-data_dir = tf.keras.utils.get_file('flower_photos', origin=dataset_url, untar=True)
+# https://www.vicos.si/Downloads/FIDS30
+
+
+# dataset_url = "https://storage.googleapis.com/download.tensorflow.org/example_images/flower_photos.tgz"
+# data_dir = tf.keras.utils.get_file('FIDS30', origin=dataset_url, untar=True)
+# # # # data_dir = pathlib.Path('./dataset/FIDS30')
+# # # # data_dir = tf.keras.utils.get_file('FIDS30', origin=dataset_url, extract=True, archive_format='auto')
+# data_dir = pathlib.Path(data_dir)
+
+
+data_dir = tf.keras.utils.get_file(os.path.abspath('./dataset/FIDS30'), origin='', extract=False)
 data_dir = pathlib.Path(data_dir)
-
+print('DATA DIR', data_dir)
 image_count = len(list(data_dir.glob('*/*.jpg')))
-print(image_count)
 
-roses = list(data_dir.glob('roses/*'))
-tulips = list(data_dir.glob('tulips/*'))
+# data_dir = tf.data.Dataset.list_files(str(data_dir/'*/*.jpg'))
+# image_count = len(data_dir)
+
+
+print('IMG COUNT',image_count)
+
+# roses = list(data_dir.glob('roses/*'))
+# tulips = list(data_dir.glob('tulips/*'))
 
 # Image.open(str(roses[1])).show()
 
@@ -78,11 +92,11 @@ num_classes = len(class_names)
 model = Sequential([
   data_augmentation,
   layers.experimental.preprocessing.Rescaling(1./255),
-  layers.Conv2D(16, 3, padding='same', activation='relu'),
-  layers.MaxPooling2D(),
-  layers.Conv2D(32, 3, padding='same', activation='relu'),
+  layers.Conv2D(64, 3, padding='same', activation='relu'),
   layers.MaxPooling2D(),
   layers.Conv2D(64, 3, padding='same', activation='relu'),
+  layers.MaxPooling2D(),
+  layers.Conv2D(128, 3, padding='same', activation='relu'),
 
   layers.MaxPooling2D(),
   layers.Dropout(0.2),
